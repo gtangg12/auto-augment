@@ -33,7 +33,7 @@ def sample_covariance(smooth=True):
     return np.dot(L, L.T)
 
 
-def sample_gaussian(image_shape: Tuple[int, int], max_scale=0.1, covariance_scale=512):
+def sample_gaussian(image_shape: Tuple[int, int], max_scale=0.1, covariance_scale=512, smooth_covariance=True):
     """
     Sample a Gaussian distribution with a random mean and covariance matrix.
     """
@@ -54,7 +54,7 @@ def sample_gaussian(image_shape: Tuple[int, int], max_scale=0.1, covariance_scal
     return gaussian
 
 
-def gaussian_source_sink(image_shape: Tuple[int, int], beta: float, num_gaussians=32, source_sink_ratio=0.5, max_scale=0.1):
+def gaussian_source_sink(image_shape: Tuple[int, int], beta: float, num_gaussians=32, source_sink_ratio=0.5, max_scale=0.1, smooth_covariance=True):
     """
     Add Gaussian noise at source locations and subtract Gaussian noise at sink locations.
     """
@@ -78,7 +78,9 @@ if __name__ == '__main__':
     image = image / 255
     depth = np.load('/home/gtangg12/auto-augment/tests/example_output_depth.npy')
 
-    betas = gaussian_source_sink(image.shape[1:], beta=0.1, num_gaussians=128, source_sink_ratio=0.5, max_scale=0.025)
+    betas  = gaussian_source_sink(image.shape[1:], beta=0.1, num_gaussians=32, source_sink_ratio=0.5, max_scale=0.025, smooth_covariance=True)
+    # add this to the haze function 
+    # betas += gaussian_source_sink(image.shape[1:], beta=0.1, num_gaussians=64, source_sink_ratio=0.5, max_scale=0.1, smooth_covariance=False)
     image_haze = haze(image, depth, beta=betas)
     image_haze = image_haze.transpose(1, 2, 0)
     image_haze = Image.fromarray((image_haze * 255).astype('uint8'))
