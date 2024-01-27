@@ -23,5 +23,6 @@ class TacticService:
                 return [
                     line.split(" ", 1)[1].strip() for line in lines[: self.n_tactics]
                 ]
+            print("attempt failed for tactic generation. this is rare.")
         print("tactic generation failed after 3 attempts")
         return []
