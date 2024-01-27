@@ -28,15 +28,18 @@ class DepthModel:
         inputs = inputs.to(self.model.device)
         with torch.no_grad():
             outputs = self.model(**inputs)
-
+        
         prediction = torch.nn.functional.interpolate(
             outputs.predicted_depth.unsqueeze(1), size=image[0].size[::-1], mode='bicubic', align_corners=False
         )
+        prediction = torch.clip(prediction, 0, 1000)
         return [pred.squeeze().cpu().numpy() for pred in prediction]
     
     @classmethod
-    def calibrate(cls, pred: np.ndarray, scale=100, shift=-7):
-        return scale / (pred + shift)
+    def calibrate(cls, pred: np.ndarray, scale=100, shift=0):
+        depth = scale / (pred + shift + 1e-5)
+        depth = np.clip(depth, 0, 1000)
+        return depth
     
     @classmethod
     def colormap(cls, pred: np.ndarray):
@@ -46,12 +49,24 @@ class DepthModel:
         return pred
     
 
+class VisibilityDegredationModel:
+    """
+    """
+    def __init___(self):
+        pass
+
+    def __call__(self, image: List[PIL.Image.Image], depth: List[np.ndarray], beta: float, alpha=None):
+        """
+        """
+        pass
+    
+
 if __name__ == '__main__':
     image = PIL.Image.open('/home/gtangg12/auto-augment/tests/example.png')
     model = DepthModel()
     outputs = model(image)
-    for i, depth in enumerate(outputs):
-        depth_out = DepthModel.calibrate(depth)
-        np.save(f'/home/gtangg12/auto-augment/tests/example{i}_output_depth.npy', depth_out)
-        image_out = DepthModel.colormap(depth)
-        image_out.save(f'/home/gtangg12/auto-augment/tests/example{i}_output_depth.png')
+    depth = outputs[0]
+    depth_out = DepthModel.calibrate(depth)
+    np.save(f'/home/gtangg12/auto-augment/tests/example_output_depth.npy', depth_out)
+    image_out = DepthModel.colormap(depth)
+    image_out.save(f'/home/gtangg12/auto-augment/tests/example_output_depth.png')

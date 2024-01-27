@@ -25,9 +25,16 @@ class EditingEnvironmentPipeline:
         """
         :param steps: number of diffusion steps to sample
         """
+        if isinstance(text, str):
+            text  = [text]
+        if isinstance(image, PIL.Image.Image):
+            image = [image]
+            
         with torch.no_grad():
             outputs = self.model(text, image=image, num_inference_steps=steps, **kwargs)
-        return outputs.images
+        return [
+            x.resize(image[0].size) for x in outputs.images
+        ]
     
 
 if __name__ == '__main__':
@@ -41,4 +48,4 @@ if __name__ == '__main__':
         [image, image, image],
     )
     for i, image_out in enumerate(outputs):
-        image_out.save(f'/home/gtangg12/auto-augment/tests/example{i}_output.png')
+        image_out.save(f'/home/gtangg12/auto-augment/tests/example_output{i}.png')
