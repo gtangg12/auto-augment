@@ -57,6 +57,7 @@ if __name__ == '__main__':
         augments, scores = agent.branch(image)
         for a, s in zip(augments, scores):
             a.save(f'tests/example_tunelpip_{len(all_scores)}.png')
+            print(s)
             all_scores.append(s)
 
     print(all_scores)
