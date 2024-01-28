@@ -7,9 +7,7 @@ import os
 import time
 from PIL import Image
 
-# agent = FakeBranchingAgent()
 # fogAgent = FakeFogBranchingAgent()
-agent = BranchingAgent()
 fogAgent = FogBrancher()
 images = {}
 tmpdir: str = ""
@@ -31,7 +29,10 @@ def new_image_path() -> str:
   
 def autoBot(messages):
   # shittiest code ive ever written
-  queue = [images[messages[-1][0][0]]]
+  base_image = images[messages[-1][0][0]]
+  queue = [base_image]
+  # agent = FakeBranchingAgent(base_image)
+  agent = BranchingAgent(base_image)
   print(messages)
   while True:
     image = queue.pop(0)
@@ -86,7 +87,10 @@ def bot(messages):
     messages.append([None, "**Generating Augmentations**"])
     yield messages
     idx = 0
-    for results in agent.branch(images[messages[-2][0][0]]):
+    base_image = images[messages[-2][0][0]]
+    # agent = FakeBranchingAgent(base_image)
+    agent = BranchingAgent(base_image)
+    for results in agent.branch(base_image):
       if idx == 0:
         tactics: List[str] = results
         print('got tactics', tactics)
