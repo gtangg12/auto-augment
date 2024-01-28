@@ -54,7 +54,7 @@ class BranchingAgent:
         for augment, tactic, score in zip(augments, tactics, scores):
             self.save_data(augment, tactic, score)
         if len(filtered) > 0:
-            new_augments = self.pix2pix_service(text=filtered, image=[image for _ in filtered], guidance_scale=3)
+            new_augments = self.pix2pix_service(text=filtered, image=[image for _ in filtered], guidance_scale=2.2)
             new_scores = self.lpips_service([self.base_image for _ in filtered], new_augments)
             results.extend([
                 augment
