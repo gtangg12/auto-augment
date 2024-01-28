@@ -35,13 +35,6 @@ def autoBot(messages):
   print(messages)
   while True:
     image = queue.pop(0)
-    messages.append([None, "**Generating Fog Augmentations**"])
-    yield messages
-    for results in fogAgent.branch(image):
-      branches: List[Image.Image] = results
-      # queue.extend(branches)
-      handleImages_(messages, branches)
-      yield messages
     messages.append([None, "**Generating Augmentations**"])
     yield messages
     idx = 0
@@ -57,6 +50,13 @@ def autoBot(messages):
         queue.extend(branches)
         handleImages_(messages, branches)
       idx += 1
+      yield messages
+    messages.append([None, "**Generating Fog Augmentations**"])
+    yield messages
+    for results in fogAgent.branch(image):
+      branches: List[Image.Image] = results
+      # queue.extend(branches)
+      handleImages_(messages, branches)
       yield messages
 
 def handleImages_(messages, branches: List[Image.Image]):
