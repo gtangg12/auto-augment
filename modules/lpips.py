@@ -23,7 +23,7 @@ class LPIPS:
         batch1 = torch.stack([self._convert_image(image) for image in images1], dim=0)
         batch2 = torch.stack([self._convert_image(image) for image in images2], dim=0)
         res = self.lpips(batch1, batch2).squeeze((1, 2, 3)).tolist()
-        if isinstance(res, float):
+        if isinstance(res, float): # pytorch behaves differently on different versions, so we need to type check
             return [res]
         return res
 

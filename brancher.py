@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import random
 import PIL
 from typing import List, Tuple
@@ -19,7 +20,7 @@ class BranchingAgent:
         self.score_threshold = score_threshold
         self.base_image = base_image
         self.save_to = 'generated/'
-        os.mkdir(self.save_to)
+        Path(self.save_to).mkdir(exist_ok=True, parents=True)
 
     def save_data(self, image: PIL.Image.Image, tactic: str, score: float):
         image.save(
