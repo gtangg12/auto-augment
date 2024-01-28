@@ -27,7 +27,7 @@ class TacticService:
                     tactics = [
                         line.split(" ", 1)[1].strip() for line in lines
                     ]
-                    tactics = [x for x in tactics if 'traffic' not in x.lower()]
+                    tactics = [x for x in tactics if 'traffic' not in x.lower() and "saturation" not in x.lower()]
                     tactics = random.sample(tactics, self.n_tactics)
                     return tactics
             except Exception:
