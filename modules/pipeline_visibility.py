@@ -55,7 +55,7 @@ class VisibilityDegredationModel:
     """
     Model for simulating visibility degredation.
     """
-    def __init___(self):
+    def __init__(self):
         self.model_depth = DepthModel()
 
     def __call__(self, image: List[PIL.Image.Image], depth: List[np.ndarray]=None, color_jitter=False, **kwargs):
