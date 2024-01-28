@@ -2,7 +2,7 @@ import PIL.Image
 from typing import List, Tuple
 
 class FakeBranchingAgent:
-    def branch(self, image: PIL.Image.Image): # see brancher -> Tuple[List[str], List[PIL.Image.Image]]:
+    async def branch(self, image: PIL.Image.Image): # see brancher -> Tuple[List[str], List[PIL.Image.Image]]:
         yield ['no tactic', 'no tactic']
         yield [image, image]
     

@@ -1,16 +1,16 @@
 from typing import List
-# from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
-from fog_brancher import FogBrancher
-from brancher import BranchingAgent
+from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
+# from fog_brancher import FogBrancher
+# from brancher import BranchingAgent
 import gradio as gr
 import os
 import time
 from PIL import Image
 
-# agent = FakeBranchingAgent()
-# fogAgent = FakeFogBranchingAgent()
-agent = BranchingAgent()
-fogAgent = FogBrancher()
+agent = FakeBranchingAgent()
+fogAgent = FakeFogBranchingAgent()
+# agent = BranchingAgent()
+# fogAgent = FogBrancher()
 images = {}
 tmpdir: str = ""
 def add_file(messages, file):
@@ -29,7 +29,7 @@ def new_image_path() -> str:
     counter += 1
     return os.path.join(tmpdir, f".__wzhao6_internal__{counter}.png")
   
-def autoBot(messages):
+async def autoBot(messages):
   # shittiest code ive ever written
   queue = [images[messages[-1][0][0]]]
   print(messages)
@@ -38,7 +38,7 @@ def autoBot(messages):
     messages.append([None, "**Generating Augmentations**"])
     yield messages
     idx = 0
-    for results in agent.branch(image):
+    async for results in agent.branch(image):
       if idx == 0:
         tactics: List[str] = results
         print('got tactics', tactics)
@@ -79,14 +79,14 @@ def fogBot(messages):
         handleImages_(messages, branches)
         yield messages
 
-def bot(messages):
+async def bot(messages):
     """
     """
     print(messages)
     messages.append([None, "**Generating Augmentations**"])
     yield messages
     idx = 0
-    for results in agent.branch(images[messages[-2][0][0]]):
+    async for results in agent.branch(images[messages[-2][0][0]]):
       if idx == 0:
         tactics: List[str] = results
         print('got tactics', tactics)

@@ -5,6 +5,7 @@ from enum import Enum
 from typing import List, Literal, Optional
 
 import requests
+import aiohttp
 import torch
 import torch.nn as nn
 from PIL import Image
@@ -60,7 +61,7 @@ class GPT(nn.Module):
         self.system_mode = system_mode
         self.reset()
 
-    def forward(self, text: Optional[str]=None, image: Optional[List[Image.Image]]=None, max_tokens=512) -> str:
+    async def forward(self, text: Optional[str]=None, image: Optional[List[Image.Image]]=None, max_tokens=512) -> str:
         """
         Send a prompt to the model and return the response.
 
@@ -83,8 +84,10 @@ class GPT(nn.Module):
         data = {'model': self.model, 'messages': self.messages, 'max_tokens': max_tokens}
         if self.system_mode == SystemMode.JSON:
             data['response_format'] = {'type': 'json_object'}
-        response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
-        response = response.json()
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data) as response:
+                response = await response.json()
         try:
             response_message = response['choices'][0]['message']['content']
         except:

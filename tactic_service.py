@@ -11,7 +11,7 @@ class TacticService:
     def __init__(self, n_tactics: int = 4):
         self.n_tactics = n_tactics
 
-    def __call__(self, image: Image.Image) -> List[str]:
+    async def __call__(self, image: Image.Image) -> List[str]:
         for _ in range(3):
             try:
                 prompt = TACTIC_GENERATION_PROMPT.format(str(self.n_tactics + 2))
@@ -20,7 +20,7 @@ class TacticService:
                     system_text=prompt,
                 )
                 print("tactic generation prompt: ", prompt)
-                response = model.forward(image=[image])
+                response = await model.forward(image=[image])
                 lines = response.split("\n")
                 if all(lines[i].startswith(f"{i+1}.") for i in range(self.n_tactics)):
                     tactics = [
