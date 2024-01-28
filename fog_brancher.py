@@ -12,7 +12,7 @@ class FogBrancher:
     def branch(self, image: Image.Image):# -> List[Image.Image]:
         res = []
         for _ in range(2):
-            beta = random.random() * 0.5
+            beta = random.random() * 0.2 + 0.05
             num_gaussians = random.randint(32, 128)
             source_sink_ratio = random.random()
             res.extend(self.delegate([image], beta=beta, num_gaussians=num_gaussians, source_sink_ratio=source_sink_ratio, max_scale=0.025, mode='smooth'))

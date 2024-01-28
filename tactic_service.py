@@ -13,19 +13,24 @@ class TacticService:
 
     def __call__(self, image: Image.Image) -> List[str]:
         for _ in range(3):
-            model = GPT(
-                system_mode=SystemMode.MAIN,
-                system_text=TACTIC_GENERATION_PROMPT.format(str(self.n_tactics)),
-            )
-            response = model.forward(image=[image])
-            lines = response.split("\n")
-            if all(lines[i].startswith(f"{i+1}.") for i in range(self.n_tactics)):
-                tactics = [
-                    line.split(" ", 1)[1].strip() for line in lines[: self.n_tactics]
-                ]
-                # pix2pix is stupid when you say 'saturate'
-                tactics = [x for x in tactics if 'saturate' not in x.lower()]
-                return tactics
-            print("attempt failed for tactic generation. this is rare.")
+            try:
+                prompt = TACTIC_GENERATION_PROMPT.format(str(self.n_tactics + 2))
+                model = GPT(
+                    system_mode=SystemMode.MAIN,
+                    system_text=prompt,
+                )
+                print("tactic generation prompt: ", prompt)
+                response = model.forward(image=[image])
+                lines = response.split("\n")
+                if all(lines[i].startswith(f"{i+1}.") for i in range(self.n_tactics)):
+                    tactics = [
+                        line.split(" ", 1)[1].strip() for line in lines
+                    ]
+                    # pix2pix is stupid when you say 'saturate'
+                    tactics = [x for x in tactics if 'saturate' not in x.lower() and 'traffic' not in x.lower()][: self.n_tactics]
+                    return tactics
+            except Exception:
+                pass
+            print("attempt failed for tactic generation. this is rare: llm output: ", response)
         print("tactic generation failed after 3 attempts")
         return []
