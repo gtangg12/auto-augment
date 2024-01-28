@@ -41,7 +41,7 @@ class BranchingAgent:
         tactics = self.tactic_service(image)
         if len(tactics) == 0:
             print('no tactics found')
-            return
+            return [], []
             
         augments = self.pix2pix_service(text=tactics, image=[image for _ in tactics])
         scores = self.lpips_service([image for _ in tactics], augments)
