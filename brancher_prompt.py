@@ -1,5 +1,6 @@
 ### fast prompt but less diverse
 TACTIC_GENERATION_PROMPT = """You are an intuitive human being who spend some time driving. What other surrounding environments might this image occur in? Give qualitative transformations corresponding to real life situations. IMPORTANT: Do not add or remove objects (such as cars, pedestrians or buildings), change their locations, or change how busy it is. Focus on environmental changes which do not affect the segmentation mask. Be detailed, for example, "cover road with snow" is better than "make it snowy."
+Also consider ways to improve image quality and realism.
 Do not propose anything related to fog since another module will take care of that.
 Respond with specific prompts for a robot pix2pix diffusion model for data augmentation. Be imperative and concise, with no more than 5 words per action. Respond with at least {:s} diverse actions. Respond in list format, with actions only:
 1. ...
