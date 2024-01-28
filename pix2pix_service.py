@@ -1,2 +1,0 @@
-class Pix2PixService:
-    
