@@ -9,7 +9,7 @@ from tactic_service import TacticService
 class BranchingAgent:
     """ """
 
-    def __init__(self, score_threshold: float = 1e-3):
+    def __init__(self, score_threshold: float = 1e-2):
         self.tactic_service = TacticService()
         self.pix2pix_service = EditingEnvironmentPipeline()
         self.lpips_service = LPIPS()

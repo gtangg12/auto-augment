@@ -1,8 +1,9 @@
+from brancher import BranchingAgent
 import gradio as gr
 import os
 import time
 
-
+agent = BranchingAgent()
 def add_file(messages, file):
     """
     """
@@ -14,13 +15,11 @@ def add_file(messages, file):
 def bot(messages):
     """
     """
-    response = "**This is a simple test scripting that is longer than usual and contains no useful content!**"
-    messages[-1][1] = ""
-    for character in response:
-        messages[-1][1] += character
-        time.sleep(0.01)
-        yield messages
-
+    messages[-1][1] = "**Generating augmentations**"
+    branches = agent.branch(messages[-1][0][0])
+    messages.append(
+      (branches, None)
+    )
 
 CSS = """
 .contain {
