@@ -8,14 +8,14 @@ from PIL import Image
 
 
 class TacticService:
-    def __init__(self, n_tactics: int = 10):
+    def __init__(self, n_tactics: int = 4):
         self.n_tactics = n_tactics
 
     def __call__(self, image: Image.Image) -> List[str]:
         for _ in range(3):
             model = GPT(
                 system_mode=SystemMode.MAIN,
-                system_text=TACTIC_GENERATION_PROMPT,
+                system_text=TACTIC_GENERATION_PROMPT.format(str(self.n_tactics)),
             )
             response = model.forward(image=[image])
             lines = response.split("\n")
