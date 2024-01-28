@@ -1,5 +1,5 @@
 import PIL
-from typing import List
+from typing import List, Tuple
 from modules.lpips import LPIPS
 from modules.pipeline_editing_environment import EditingEnvironmentPipeline
 
@@ -16,12 +16,16 @@ class BranchingAgent:
         self.lpips_service = LPIPS()
         self.score_threshold = score_threshold
 
-    def branch(self, image: PIL.Image.Image) -> List[PIL.Image.Image]:
+    def branch(self, image: PIL.Image.Image): # yields a tuple of string, then yields images, then returns -> Tuple[List[str], List[PIL.Image.Image]]:
         """ """
         tactics = self.tactic_service(image)
         if len(tactics) == 0:
             print('no tactics found')
-            return [] # no image generated
+            yield []
+            yield []
+            return # no image generated
+        yield tactics
+            
         augments = self.pix2pix_service(text=tactics, image=[image for _ in tactics])
         scores = self.lpips_service([image for _ in tactics], augments)
         results = [
@@ -31,5 +35,4 @@ class BranchingAgent:
         ]
         if len(results) == 0:
             print('no pix2pix image passed validation')
-            return []
-        return results
+        yield results

@@ -1,12 +1,17 @@
 # from brancher import BranchingAgent
-from fake_brancher import FakeBranchingAgent
+from typing import List
+from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
+# from fog_brancher import FogBrancher
+# from brancher import BranchingAgent
 import gradio as gr
 import os
 import time
 from PIL import Image
 
-# agent = BranchingAgent()
 agent = FakeBranchingAgent()
+fogAgent = FakeFogBranchingAgent()
+# agent = BranchingAgent()
+# fogAgent = FogBrancher()
 images = {}
 tmpdir: str = ""
 def add_file(messages, file):
@@ -14,7 +19,7 @@ def add_file(messages, file):
     """
     print(messages)
     images[file.name] = Image.open(file)
-    messages = messages + [((file.name,), None)]
+    messages.append([[file.name,], None])
     global tmpdir
     tmpdir = os.path.dirname(file.name)
     yield messages
@@ -24,22 +29,76 @@ def new_image_path() -> str:
     global counter
     counter += 1
     return os.path.join(tmpdir, f".__wzhao6_internal__{counter}.png")
+  
+def autoBot(messages):
+  # shittiest code ive ever written
+  queue = [images[messages[-1][0][0]]]
+  print(messages)
+  while True:
+    image = queue.pop(0)
+    messages.append([None, "**Generating Fog Augmentations**"])
+    yield messages
+    for results in fogAgent.branch(image):
+      branches: List[Image.Image] = results
+      queue.extend(branches)
+      handleImages_(messages, branches)
+      yield messages
+    messages.append([None, "**Generating Augmentations**"])
+    yield messages
+    idx = 0
+    for results in agent.branch(image):
+      if idx == 0:
+        tactics: List[str] = results
+        print('got tactics', tactics)
+        messages.append(
+           [None, f"LLM Suggested Augmentations: {', '.join(tactics)}"]
+        )
+      elif idx == 1:
+        branches: List[Image.Image] = results
+        queue.extend(branches)
+        handleImages_(messages, branches)
+      idx += 1
+      yield messages
 
-def bot(messages):
-    """
-    """
-    print(messages)
-    messages[-1][1] = "**Generating augmentations**"
-    branches = agent.branch(images[messages[-1][0][0]])
+def handleImages_(messages, branches: List[Image.Image]):
     names = []
     for output in branches:
       path = new_image_path()
       output.save(path)
       names.append(path)
+    print('got branches', names)
     messages.append(
-      (names, None)
+      [names, None]
     )
+
+def fogBot(messages):
+    print(messages)
+    messages.append([None, "**Generating Fog Augmentations**"])
     yield messages
+    for results in fogAgent.branch(images[messages[-2][0][0]]):
+        branches: List[Image.Image] = results
+        handleImages_(messages, branches)
+        yield messages
+
+def bot(messages):
+    """
+    """
+    print(messages)
+    messages.append([None, "**Generating Augmentations**"])
+    yield messages
+    idx = 0
+    for results in agent.branch(images[messages[-2][0][0]]):
+      if idx == 0:
+        tactics: List[str] = results
+        print('got tactics', tactics)
+        messages.append(
+           [None, f"LLM Suggested Augmentations: {', '.join(tactics)}"]
+        )
+      elif idx == 1:
+        branches: List[Image.Image] = results
+        handleImages_(messages, branches)
+      idx += 1
+      yield messages
 
 CSS = """
 .contain {
@@ -70,11 +129,19 @@ with gr.Blocks(css=CSS) as demo:
     )
 
     with gr.Row():
-        button = gr.UploadButton("📁", file_types=['image'])
+        button = gr.UploadButton("LLM Augment 📁", file_types=['image'])
+        fogButton = gr.UploadButton("Fog Augment 🌫️", file_types=['image'])
+        autoButton = gr.UploadButton("Auto Augment 🤖", file_types=['image'])
 
     file_message = button.upload(add_file, [chatbot, button], [chatbot], queue=False).then(
-        bot, chatbot, chatbot
+      bot, chatbot, chatbot
+    )
+    fog_message = fogButton.upload(add_file, [chatbot, fogButton], [chatbot], queue=False).then(
+      fogBot, chatbot, chatbot
+    )
+    auto_message = autoButton.upload(add_file, [chatbot, autoButton], [chatbot], queue=False).then(
+      autoBot, chatbot, chatbot
     )
 
 
-demo.launch(share=True)
+demo.launch(share=False)
