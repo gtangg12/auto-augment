@@ -17,3 +17,10 @@ class FogBrancher:
             source_sink_ratio = random.random()
             res.extend(self.delegate([image], beta=beta, num_gaussians=num_gaussians, source_sink_ratio=source_sink_ratio, max_scale=0.025, mode='smooth'))
         yield res
+
+if __name__ == '__main__':
+    image = Image.open('tests/example.png')
+    brancher = FogBrancher()
+    for x in brancher(image):
+        for i, y in enumerate(x):
+            y.save(f'tests/example_output_{i}.png')
