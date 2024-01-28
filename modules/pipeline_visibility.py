@@ -4,6 +4,7 @@ import PIL
 import numpy as np
 import torch
 import torch.nn as nn
+from torchvision import transforms
 from transformers import DPTImageProcessor, DPTForDepthEstimation
 from modules.pipeline_visibility_utils import *
 
@@ -57,7 +58,7 @@ class VisibilityDegredationModel:
     def __init___(self):
         self.model_depth = DepthModel()
 
-    def __call__(self, image: List[PIL.Image.Image], depth: List[np.ndarray]=None, **kwargs):
+    def __call__(self, image: List[PIL.Image.Image], depth: List[np.ndarray]=None, color_jitter=False, **kwargs):
         """
         :param image: list of PIL.Image.Image
         :param depth: list of np.ndarray of depth (optionally)
@@ -73,6 +74,11 @@ class VisibilityDegredationModel:
             xo = xo.transpose(1, 2, 0)
             xo = PIL.Image.fromarray((xo * 255).astype('uint8'))
             outputs.append(xo)
+        
+        if color_jitter:
+            outputs = torch.stack([transforms.ToTensor()(x) for x in outputs])
+            outputs = transforms.ColorJitter(brightness=0.5, contrast=0.25, saturation=0.25, hue=0.25)(outputs)
+            outputs = [transforms.ToPILImage()(x) for x in outputs]
         return outputs
     
 
@@ -89,5 +95,5 @@ if __name__ == '__main__':
     model_degrader = VisibilityDegredationModel() # aka model_pua
     image = [image]
     depth = [depth_out]
-    outputs = model_degrader(image, depth, beta=0.1, num_gaussians=64, source_sink_ratio=0.5, max_scale=0.025, mode='smooth')
+    outputs = model_degrader(image, depth, beta=0.1, num_gaussians=64, source_sink_ratio=0.5, max_scale=0.025, mode='smooth', color_jitter=True)
     outputs[0].save(f'/home/gtangg12/auto-augment/tests/example_output_haze.png')
