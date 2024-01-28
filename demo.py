@@ -1,14 +1,17 @@
 # from brancher import BranchingAgent
 from typing import List
 from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
+# from fog_brancher import FogBrancher
+# from brancher import BranchingAgent
 import gradio as gr
 import os
 import time
 from PIL import Image
 
-# agent = BranchingAgent()
 agent = FakeBranchingAgent()
 fogAgent = FakeFogBranchingAgent()
+# agent = BranchingAgent()
+# fogAgent = FogBrancher()
 images = {}
 tmpdir: str = ""
 def add_file(messages, file):
