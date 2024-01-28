@@ -1,6 +1,7 @@
 """The tactic service generates tactics for data augmentation."""
 
 
+import random
 from typing import List
 from brancher_prompt import TACTIC_GENERATION_PROMPT
 from modules.model_gpt import GPT, SystemMode
@@ -14,7 +15,7 @@ class TacticService:
     def __call__(self, image: Image.Image) -> List[str]:
         for _ in range(3):
             try:
-                prompt = TACTIC_GENERATION_PROMPT.format(str(self.n_tactics + 2))
+                prompt = TACTIC_GENERATION_PROMPT.format(str(self.n_tactics + 6))
                 model = GPT(
                     system_mode=SystemMode.MAIN,
                     system_text=prompt,
@@ -27,7 +28,8 @@ class TacticService:
                         line.split(" ", 1)[1].strip() for line in lines
                     ]
                     # pix2pix is stupid when you say 'saturate'
-                    tactics = [x for x in tactics if 'saturate' not in x.lower() and 'traffic' not in x.lower()][: self.n_tactics]
+                    tactics = [x for x in tactics if 'saturate' not in x.lower() and 'traffic' not in x.lower()]
+                    tactics = random.sample(tactics, self.n_tactics)
                     return tactics
             except Exception:
                 pass
