@@ -65,10 +65,10 @@ def handleImages_(messages, branches: List[Image.Image]):
       path = new_image_path()
       output.save(path)
       names.append(path)
+      messages.append(
+        [[path], None]
+      )
     print('got branches', names)
-    messages.append(
-      [names, None]
-    )
 
 def fogBot(messages):
     print(messages)
