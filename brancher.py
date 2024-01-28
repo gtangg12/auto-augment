@@ -53,7 +53,7 @@ if __name__ == '__main__':
     agent = BranchingAgent(n_tactics=4)
 
     all_scores = []
-    for i in range(5):
+    for i in range(10):
         augments, scores = agent.make_lpips_tuneset(image)
         for a, s in zip(augments, scores):
             a.save(f'tests/example_tunelpip_{len(all_scores)}.png')
