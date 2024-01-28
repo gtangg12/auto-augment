@@ -6,6 +6,7 @@ from modules.pipeline_editing_environment import EditingEnvironmentPipeline
 from tactic_service import TacticService
 
 
+
 class BranchingAgent:
     """ """
 

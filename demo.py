@@ -1,10 +1,12 @@
-from brancher import BranchingAgent
+# from brancher import BranchingAgent
+from fake_brancher import FakeBranchingAgent
 import gradio as gr
 import os
 import time
 from PIL import Image
 
-agent = BranchingAgent()
+# agent = BranchingAgent()
+agent = FakeBranchingAgent()
 images = {}
 tmpdir: str = ""
 def add_file(messages, file):
@@ -33,10 +35,11 @@ def bot(messages):
     for output in branches:
       path = new_image_path()
       output.save(path)
-      names.append(os.path.basename(path))
+      names.append(path)
     messages.append(
       (names, None)
     )
+    yield messages
 
 CSS = """
 .contain {
