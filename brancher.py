@@ -28,6 +28,15 @@ class BranchingAgent:
                 self.save_to, 
                 f'data_{tactic}_{score}_{random.randint(0, int(1e6))}'.replace(' ', '_').replace('.', '_')
                   + '.png'))
+        
+    def safe_tactic(self, tactic: str) -> bool:
+        bad = [
+            "leaf",
+            "leaves",
+            "lamp",
+            "cloud",
+        ]
+        return not any(b in tactic.lower() for b in bad)
 
     def branch(self, image: PIL.Image.Image): # yields a tuple of string, then yields images, then returns -> Tuple[List[str], List[PIL.Image.Image]]:
         """ """
@@ -43,13 +52,13 @@ class BranchingAgent:
         scores = self.lpips_service([self.base_image for _ in tactics], augments)
         results = [
             augment
-            for augment, score in zip(augments, scores)
-            if score < self.score_threshold
+            for augment, score, tactic in zip(augments, scores, tactics)
+            if score < self.score_threshold and self.safe_tactic(tactic)
         ]
         filtered = [
             tactic
             for tactic, score in zip(tactics, scores)
-            if score > self.score_threshold
+            if score > self.score_threshold or not self.safe_tactic(tactic)
         ]
         for augment, tactic, score in zip(augments, tactics, scores):
             self.save_data(augment, tactic, score)
