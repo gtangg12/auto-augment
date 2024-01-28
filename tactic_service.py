@@ -8,7 +8,7 @@ from PIL import Image
 
 
 class TacticService:
-    def __init__(self, n_tactics: int = 8):
+    def __init__(self, n_tactics: int = 4):
         self.n_tactics = n_tactics
 
     def __call__(self, image: Image.Image) -> List[str]:
