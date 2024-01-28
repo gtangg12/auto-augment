@@ -20,9 +20,12 @@ class TacticService:
             response = model.forward(image=[image])
             lines = response.split("\n")
             if all(lines[i].startswith(f"{i+1}.") for i in range(self.n_tactics)):
-                return [
+                tactics = [
                     line.split(" ", 1)[1].strip() for line in lines[: self.n_tactics]
                 ]
+                # pix2pix is stupid when you say 'saturate'
+                tactics = [x for x in tactics if 'saturate' not in x.lower()]
+                return tactics
             print("attempt failed for tactic generation. this is rare.")
         print("tactic generation failed after 3 attempts")
         return []

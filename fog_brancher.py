@@ -9,7 +9,7 @@ class FogBrancher:
         # lol i love to wRaP mY cLaSsEs
         self.delegate = VisibilityDegredationModel()
     
-    def __call__(self, image: Image.Image):# -> List[Image.Image]:
+    def branch(self, image: Image.Image):# -> List[Image.Image]:
         res = []
         for _ in range(2):
             beta = random.random() * 0.5
@@ -21,6 +21,6 @@ class FogBrancher:
 if __name__ == '__main__':
     image = Image.open('tests/example.png')
     brancher = FogBrancher()
-    for x in brancher(image):
+    for x in brancher.branch(image):
         for i, y in enumerate(x):
             y.save(f'tests/example_output_{i}.png')
