@@ -27,8 +27,7 @@ class TacticService:
                     tactics = [
                         line.split(" ", 1)[1].strip() for line in lines
                     ]
-                    # pix2pix is stupid when you say 'saturate'
-                    tactics = [x for x in tactics if 'saturate' not in x.lower() and 'traffic' not in x.lower()]
+                    tactics = [x for x in tactics if 'traffic' not in x.lower()]
                     tactics = random.sample(tactics, self.n_tactics)
                     return tactics
             except Exception:

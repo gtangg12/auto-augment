@@ -34,6 +34,19 @@ class BranchingAgent:
             for augment, score in zip(augments, scores)
             if score < self.score_threshold
         ]
+        filtered = [
+            tactic
+            for tactic, score in zip(tactics, scores)
+            if score < self.score_threshold
+        ]
+        if len(filtered) > 0:
+            new_augments = self.pix2pix_service(text=filtered, image=[image for _ in filtered], guidance_scale=3)
+            new_scores = self.lpips_service([self.base_image for _ in filtered], new_augments)
+            results.extend([
+                augment
+                for augment, score in zip(new_augments, new_scores)
+                if score < self.score_threshold
+            ])
         if len(results) == 0:
             print('no pix2pix image passed validation')
         yield results
