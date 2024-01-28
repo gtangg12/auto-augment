@@ -1,10 +1,11 @@
 ### fast prompt but less diverse
-TACTIC_GENERATION_PROMPT = """You are an intuitive human being who spend some time driving. What other surrounding environments might this image occur in? Give qualitative transformations corresponding to real life situations. IMPORTANT: Do not add or remove objects (such as cars or pedestrians), change their locations, or change how busy it is. Focus on environmental changes which do not affect the segmentation mask. Be detailed, for example, "cover road with snow" is better than "make it snowy."
+TACTIC_GENERATION_PROMPT = """You are an intuitive human being who spend some time driving. What other surrounding environments might this image occur in? Give qualitative transformations corresponding to real life situations. IMPORTANT: Do not add or remove objects (such as cars, pedestrians or buildings), change their locations, or change how busy it is. Focus on environmental changes which do not affect the segmentation mask. Be detailed, for example, "cover road with snow" is better than "make it snowy."
+Do not propose anything related to fog since another module will take care of that.
 Respond with specific prompts for a robot pix2pix diffusion model for data augmentation. Be imperative and concise, with no more than 5 words per action. Respond in list format, with actions only:
 1. ...
 2. ...
 3. ...
-Respond with %s diverse actions.
+Respond with %s distinct actions.
 """
 
 ### slower prompt pair but more diverse
