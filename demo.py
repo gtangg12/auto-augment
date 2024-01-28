@@ -39,7 +39,7 @@ def autoBot(messages):
     yield messages
     for results in fogAgent.branch(image):
       branches: List[Image.Image] = results
-      queue.extend(branches)
+      # queue.extend(branches)
       handleImages_(messages, branches)
       yield messages
     messages.append([None, "**Generating Augmentations**"])

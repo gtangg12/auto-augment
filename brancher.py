@@ -10,7 +10,7 @@ from tactic_service import TacticService
 class BranchingAgent:
     """ """
 
-    def __init__(self, score_threshold: float = 1e-2, n_tactics: int = 4):
+    def __init__(self, score_threshold: float = 3e-3, n_tactics: int = 4):
         self.tactic_service = TacticService(n_tactics=n_tactics)
         self.pix2pix_service = EditingEnvironmentPipeline()
         self.lpips_service = LPIPS()
