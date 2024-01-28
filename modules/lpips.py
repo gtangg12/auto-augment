@@ -15,7 +15,7 @@ class LPIPS:
     ) -> torch.Tensor:  # 3, h, w, [-1, 1]
         return (torchvision.transforms.functional.to_tensor(image) * 2 / 255) - 1
 
-    def lpips_similarity(
+    def __call__(
         self,
         images1: List[Image.Image],  # w, h
         images2: List[Image.Image],  # w, h
