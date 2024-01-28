@@ -18,10 +18,17 @@ class BranchingAgent:
     def branch(self, image: PIL.Image.Image) -> List[PIL.Image.Image]:
         """ """
         tactics = self.tactic_service(image)
+        if len(tactics) == 0:
+            print('no tactics found')
+            return [] # no image generated
         augments = self.pix2pix_service(text=tactics, image=[image for _ in tactics])
         scores = self.lpips_service([image for _ in tactics], augments)
-        return [
+        results = [
             augment
             for augment, score in zip(augments, scores)
             if score < self.score_threshold
         ]
+        if len(results) == 0:
+            print('no pix2pix image passed validation')
+            return []
+        return results
