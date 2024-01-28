@@ -31,7 +31,7 @@ class LPIPS:
 if __name__ == "__main__":
     image = Image.open("tests/example.png")
     other = Image.open("tests/example_output0.png")
-    depth = Image.open("tests/example_output_depth.png")
+    other2 = Image.open("tests/example_output2.png")
 
     lpips = LPIPS()
-    print(lpips.lpips_similarity([image, image], [other, depth]))
+    print(lpips.lpips_similarity([image, image], [other, other2]))
