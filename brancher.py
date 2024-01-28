@@ -37,7 +37,7 @@ class BranchingAgent:
         filtered = [
             tactic
             for tactic, score in zip(tactics, scores)
-            if score < self.score_threshold
+            if score > self.score_threshold
         ]
         if len(filtered) > 0:
             new_augments = self.pix2pix_service(text=filtered, image=[image for _ in filtered], guidance_scale=3)
