@@ -18,6 +18,7 @@ def haze(image: np.ndarray, depth: np.ndarray, beta: Union[float, np.ndarray], a
     trans = transmission(depth, beta)
     return np.nan_to_num(image * trans + alpha * (1 - trans))
 
+
 def sample_covariance(mode='normal'):
     """
     Sample a random covariance matrix.
@@ -47,6 +48,7 @@ def sample_covariance(mode='normal'):
     L = np.linalg.cholesky(np.dot(A, A.T)) 
     return np.dot(L, L.T)
 
+
 def sample_gaussian(image_shape: Tuple[int, int], max_scale=0.1, covariance_scale=512, mode='normal'):
     """
     Sample a Gaussian distribution with a random mean and covariance matrix.
@@ -66,6 +68,7 @@ def sample_gaussian(image_shape: Tuple[int, int], max_scale=0.1, covariance_scal
     gaussian = gaussian * scale
     return gaussian
 
+
 def gaussian_source_sink(image_shape: Tuple[int, int], beta: float, num_gaussians=32, source_sink_ratio=0.5, max_scale=0.1, mode='normal'):
     """
     Add Gaussian noise at source locations and subtract Gaussian noise at sink locations.
@@ -80,6 +83,7 @@ def gaussian_source_sink(image_shape: Tuple[int, int], beta: float, num_gaussian
         transformed_beta -= sample_gaussian(image_shape, max_scale=max_scale, mode=mode)
     transformed_beta = np.clip(transformed_beta, 0, 10)
     return transformed_beta
+
 
 if __name__ == '__main__':
     from PIL import Image
