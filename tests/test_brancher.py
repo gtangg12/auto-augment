@@ -4,5 +4,8 @@ from PIL import Image
 branch = BranchingAgent()
 image = Image.open("tests/example.png")
 branches = branch.branch(image)
+idx = 0
 for i, b in enumerate(branches):
-    b.save(f"tests/example_brancher_{i}.png")
+    if idx == 1:
+        b.save(f"tests/example_brancher_{i}.png")
+    idx += 1
