@@ -1,17 +1,16 @@
-# from brancher import BranchingAgent
 from typing import List
-from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
-# from fog_brancher import FogBrancher
-# from brancher import BranchingAgent
+# from fake_brancher import FakeBranchingAgent, FakeFogBranchingAgent
+from fog_brancher import FogBrancher
+from brancher import BranchingAgent
 import gradio as gr
 import os
 import time
 from PIL import Image
 
-agent = FakeBranchingAgent()
-fogAgent = FakeFogBranchingAgent()
-# agent = BranchingAgent()
-# fogAgent = FogBrancher()
+# agent = FakeBranchingAgent()
+# fogAgent = FakeFogBranchingAgent()
+agent = BranchingAgent()
+fogAgent = FogBrancher()
 images = {}
 tmpdir: str = ""
 def add_file(messages, file):
@@ -144,4 +143,4 @@ with gr.Blocks(css=CSS) as demo:
     )
 
 
-demo.launch(share=False)
+demo.launch(share=True)
