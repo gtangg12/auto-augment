@@ -50,7 +50,7 @@ class BranchingAgent:
 
 if __name__ == '__main__':
     image = PIL.Image.open('tests/example.png')
-    agent = BranchingAgent(n_tactics=8)
+    agent = BranchingAgent(n_tactics=4)
 
     all_scores = []
     for i in range(5):
