@@ -1,26 +1,45 @@
+# from brancher import BranchingAgent
+from fake_brancher import FakeBranchingAgent
 import gradio as gr
 import os
 import time
+from PIL import Image
 
-
+# agent = BranchingAgent()
+agent = FakeBranchingAgent()
+images = {}
+tmpdir: str = ""
 def add_file(messages, file):
     """
     """
     print(messages)
+    images[file.name] = Image.open(file)
     messages = messages + [((file.name,), None)]
-    return messages
+    global tmpdir
+    tmpdir = os.path.dirname(file.name)
+    yield messages
 
+counter = 0
+def new_image_path() -> str:
+    global counter
+    counter += 1
+    return os.path.join(tmpdir, f".__wzhao6_internal__{counter}.png")
 
 def bot(messages):
     """
     """
-    response = "**This is a simple test scripting that is longer than usual and contains no useful content!**"
-    messages[-1][1] = ""
-    for character in response:
-        messages[-1][1] += character
-        time.sleep(0.01)
-        yield messages
-
+    print(messages)
+    messages[-1][1] = "**Generating augmentations**"
+    branches = agent.branch(images[messages[-1][0][0]])
+    names = []
+    for output in branches:
+      path = new_image_path()
+      output.save(path)
+      names.append(path)
+    messages.append(
+      (names, None)
+    )
+    yield messages
 
 CSS = """
 .contain {
@@ -58,4 +77,4 @@ with gr.Blocks(css=CSS) as demo:
     )
 
 
-demo.launch()
+demo.launch(share=True)
