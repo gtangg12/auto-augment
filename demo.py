@@ -74,4 +74,4 @@ with gr.Blocks(css=CSS) as demo:
     )
 
 
-demo.launch(share=False)
+demo.launch(share=True)
