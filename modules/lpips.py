@@ -26,3 +26,12 @@ class LPIPS:
         if len(images1) == 1:
             return [res]
         return res
+
+
+if __name__ == "__main__":
+    image = Image.open("tests/example.png")
+    other = Image.open("tests/example_output0.png")
+    depth = Image.open("tests/example_output_depth.png")
+
+    lpips = LPIPS()
+    print(lpips.lpips_similarity([image, image], [other, depth]))

@@ -47,7 +47,7 @@ class EditingEnvironmentPipeline:
 
 
 if __name__ == "__main__":
-    image = PIL.Image.open("/home/gtangg12/auto-augment/tests/example.png")
+    image = PIL.Image.open("tests/example.png")
     text1 = "turn the road conditions to snowy"
     text2 = "turn the road conditions to rainy"
     text3 = "turn the road conditions to nighttime"
@@ -57,6 +57,6 @@ if __name__ == "__main__":
         [image, image, image],
     )
     for i, image_out in enumerate(outputs):
-        image_out.save(f"/home/gtangg12/auto-augment/tests/example_output{i}.png")
+        image_out.save(f"tests/example_output{i}.png")
     print("original image shape", image.size)
     print("output image shape", outputs[0].size)
