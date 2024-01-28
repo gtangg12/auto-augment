@@ -11,7 +11,7 @@ class FogBrancher:
     
     def __call__(self, image: Image.Image):# -> List[Image.Image]:
         res = []
-        for _ in range(4):
+        for _ in range(2):
             beta = random.random() * 0.5
             num_gaussians = random.randint(32, 128)
             source_sink_ratio = random.random()
